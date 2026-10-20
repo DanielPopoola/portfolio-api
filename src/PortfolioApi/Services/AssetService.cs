@@ -57,4 +57,23 @@ public class AssetService(AppDbContext db) : IAssetService
 
         return asset ?? throw new NotFoundException($"Asset '{normalized}' does not exist.");
     }
+
+    public async Task<List<AssetResponse>> ListAsync(AssetType? type, string? search,  CancellationToken ct)
+    {
+        var query = db.Assets.AsNoTracking();
+
+        if (type is not null) 
+            query = query.Where(a => a.AssetType == type.Value);
+
+        if (!string.IsNullOrWhiteSpace(search))
+        {
+            var term = search.Trim();
+            query = query.Where(a => a.Symbol.Contains(term) || a.Name.Contains(term));
+        }
+
+        return await query
+            .OrderBy(a => a.Symbol)
+            .Select(ToResponse)
+            .ToListAsync(ct);
+    }
 }

@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using PortfolioApi.Domain;
 using PortfolioApi.Dtos;
 using PortfolioApi.Services;
 
@@ -20,5 +21,11 @@ public class AssetsController(IAssetService assets): ControllerBase
     public async Task<ActionResult<AssetResponse>> GetBySymbol(string symbol, CancellationToken ct)
     {
         return Ok(await assets.GetBySymbolAsync(symbol, ct));
+    }
+
+    [HttpGet]
+    public async Task<ActionResult<List<AssetResponse>>> List(AssetType? type, string? search, CancellationToken ct)
+    {
+        return Ok(await assets.ListAsync(type, search, ct));
     }
 }
