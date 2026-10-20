@@ -1,0 +1,18 @@
+using Microsoft.AspNetCore.Mvc;
+using PortfolioApi.Dtos;
+using PortfolioApi.Services;
+
+namespace PortfolioApi.Controllers;
+
+[ApiController]
+[Route("api/assets")]
+public class AssetsController(IAssetService assets): ControllerBase
+{
+    [HttpPost]
+    public async Task<ActionResult<AssetResponse>> Create(CreateAssetRequest request, CancellationToken ct)
+    {
+        var created = await assets.CreateAsync(request, ct);
+
+        return Created($"/api/assets/{created.Symbol}", created);
+    }
+}
