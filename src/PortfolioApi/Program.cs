@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using PortfolioApi.Common;
 using PortfolioApi.Data;
+using PortfolioApi.Middleware;
 using PortfolioApi.Services;
 using System.Text.Json.Serialization;
 
@@ -18,6 +19,9 @@ builder.Services.AddControllers()
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+builder.Services.AddProblemDetails();
+
 string connectionString = builder.Configuration.GetConnectionString("Default")
     ?? throw new InvalidOperationException("Connection string 'Default' not found.");
 
@@ -32,6 +36,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseExceptionHandler();
 
 app.UseHttpsRedirection();
 
