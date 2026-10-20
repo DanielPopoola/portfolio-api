@@ -15,4 +15,10 @@ public class AssetsController(IAssetService assets): ControllerBase
 
         return Created($"/api/assets/{created.Symbol}", created);
     }
+
+    [HttpGet("{symbol}")]
+    public async Task<ActionResult<AssetResponse>> GetBySymbol(string symbol, CancellationToken ct)
+    {
+        return Ok(await assets.GetBySymbolAsync(symbol, ct));
+    }
 }

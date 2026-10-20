@@ -1,10 +1,10 @@
 ﻿using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
+using PortfolioApi.Common;
 using PortfolioApi.Data;
 using PortfolioApi.Domain;
 using PortfolioApi.Dtos;
 using PortfolioApi.Exceptions;
-
 
 namespace PortfolioApi.Services;
 
@@ -25,7 +25,7 @@ public class AssetService(AppDbContext db) : IAssetService
     {
         var asset = new Asset
         {
-            Symbol = request.Symbol.Trim().ToUpperInvariant(),
+            Symbol = Symbols.Normalize(request.Symbol),
             Name = request.Name,
             AssetType = request.AssetType!.Value,
             CurrentPrice = request.CurrentPrice,
@@ -45,4 +45,16 @@ public class AssetService(AppDbContext db) : IAssetService
         return MapToResponse(asset);
     }
 
+    public async Task<AssetResponse> GetBySymbolAsync(string symbol, CancellationToken ct)
+    {
+        var normalized = Symbols.Normalize(symbol);
+
+        var asset = await db.Assets
+            .AsNoTracking()
+            .Where(a => a.Symbol == normalized)
+            .Select(ToResponse)
+            .FirstOrDefaultAsync(ct);
+
+        return asset ?? throw new NotFoundException($"Asset '{normalized}' does not exist.");
+    }
 }
