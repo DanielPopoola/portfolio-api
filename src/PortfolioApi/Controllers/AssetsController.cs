@@ -28,4 +28,10 @@ public class AssetsController(IAssetService assets): ControllerBase
     {
         return Ok(await assets.ListAsync(type, search, ct));
     }
+
+    [HttpPut("{symbol}/price")]
+    public async Task<ActionResult<AssetResponse>> UpdatePrice(string symbol, UpdatePriceRequest request, CancellationToken ct)
+    {
+        return Ok(await assets.UpdatePriceAsync(symbol, request, ct));
+    }
 }

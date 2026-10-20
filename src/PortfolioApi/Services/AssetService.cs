@@ -76,4 +76,19 @@ public class AssetService(AppDbContext db) : IAssetService
             .Select(ToResponse)
             .ToListAsync(ct);
     }
+
+    public async Task<AssetResponse> UpdatePriceAsync(string symbol, UpdatePriceRequest request, CancellationToken ct)
+    {
+        var normalized = Symbols.Normalize(symbol);
+
+        var asset = await db.Assets
+            .FirstOrDefaultAsync(a => a.Symbol == normalized, ct) 
+            ?? throw new NotFoundException($"Asset '{normalized}' does not exist.");
+
+        asset.CurrentPrice = request.Price;
+        asset.PriceUpdatedAtUtc = DateTimeOffset.UtcNow;
+
+        await db.SaveChangesAsync(ct);
+        return MapToResponse(asset);
+    }
 }
