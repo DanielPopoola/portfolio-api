@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using PortfolioApi.Common;
 using PortfolioApi.Data;
 using PortfolioApi.Services;
 using System.Text.Json.Serialization;
@@ -6,7 +7,13 @@ using System.Text.Json.Serialization;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers()
-    .AddJsonOptions(o => o.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
+    .AddJsonOptions(o =>
+    {
+        o.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+        o.JsonSerializerOptions.Converters.Add(new UtcDateTimeOffsetConverter());
+    })
+    .ConfigureApiBehaviorOptions(o =>
+        o.InvalidModelStateResponseFactory = ValidationProblemFactory.Create);
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
