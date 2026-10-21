@@ -42,4 +42,44 @@ public class PortfolioService(AppDbContext db) : IPortfolioService
 
         return MapToResposne(portfolio);
     }
+
+    public async Task<List<PortfolioResponse>> ListByOwnerAsync(string ownerEmail, CancellationToken ct)
+    {
+        var email = ownerEmail.Trim().ToLowerInvariant();
+
+        var portfolios = await db.Portfolios
+                .AsNoTracking()
+                .Where(p => p.OwnerEmail == email)
+                .OrderBy(p => p.Name)
+                .Select(ToResponse)
+                .ToListAsync(ct);
+
+        return portfolios;
+    }
+
+    public async Task<PortfolioResponse> GetByIdAsync(int id, CancellationToken ct)
+    {
+        return await db.Portfolios
+                .AsNoTracking()
+                .Where(p => p.Id == id)
+                .Select(ToResponse)
+                .FirstOrDefaultAsync(ct) ?? throw new NotFoundException($"Portfolio {id} does not exist.");
+    }
+
+    public async Task DeleteAsync(int id, CancellationToken ct)
+    {
+        var portfolio = await db.Portfolios.FirstOrDefaultAsync(p => p.Id == id, ct)
+            ?? throw new NotFoundException($"Portfolio {id} does not exist.");
+
+        db.Portfolios.Remove(portfolio);
+
+        try
+        {
+            await db.SaveChangesAsync(ct);
+        }
+        catch (DbUpdateException ex) when (ex.IsForeignKeyViolation())
+        {
+            throw new ConflictException("Portfolio has transactions", $"Portfolio {id} has transactions and cannot be deleted.");
+        }
+    }
 }

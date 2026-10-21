@@ -19,19 +19,14 @@ public class AssetsController(IAssetService assetService): ControllerBase
 
     [HttpGet("{symbol}")]
     public async Task<ActionResult<AssetResponse>> GetBySymbol(string symbol, CancellationToken ct)
-    {
-        return Ok(await assetService.GetBySymbolAsync(symbol, ct));
-    }
+        => Ok(await assetService.GetBySymbolAsync(symbol, ct));
 
     [HttpGet]
     public async Task<ActionResult<List<AssetResponse>>> List(AssetType? type, string? search, CancellationToken ct)
-    {
-        return Ok(await assetService.ListAsync(type, search, ct));
-    }
+        => Ok(await assetService.ListAsync(type, search, ct));
+  
 
     [HttpPut("{symbol}/price")]
     public async Task<ActionResult<AssetResponse>> UpdatePrice(string symbol, UpdatePriceRequest request, CancellationToken ct)
-    {
-        return Ok(await assetService.UpdatePriceAsync(symbol, request, ct));
-    }
+        => Ok(await assetService.UpdatePriceAsync(symbol, request, ct));
 }
