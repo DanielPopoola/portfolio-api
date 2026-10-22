@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Globalization;
+using Microsoft.EntityFrameworkCore;
 using PortfolioApi.Common;
 using PortfolioApi.Data;
 using PortfolioApi.Domain;
@@ -25,22 +26,39 @@ public class TransactionService(AppDbContext db) : ITransactionService
 
         var unitPrice = request.UnitPrice ?? asset.CurrentPrice;
 
-        if (request.Type == TransactionType.Sell)
-            throw new NotImplementedException();
-
         var holding = await db.Holdings
                 .FirstOrDefaultAsync(h => h.PortfolioId == portfolioId && h.AssetId == asset.Id, ct);
 
-        if (holding is null)
+        decimal? realizedPnl = null;
+
+        if (request.Type == TransactionType.Buy)
         {
-            holding = new Holding { PortfolioId = portfolioId, AssetId = asset.Id };
-            db.Holdings.Add(holding);
+            if (holding is null)
+            {
+                holding = new Holding { PortfolioId = portfolioId, AssetId = asset.Id };
+                db.Holdings.Add(holding);
+            }
+
+            holding.AverageCost = MoneyMath.Round4(HoldingMath.AverageCostAfterBuy(
+                holding.Quantity, holding.AverageCost, request.Quantity, unitPrice, request.Fee));
+
+            holding.Quantity += request.Quantity;
         }
+        else
+        {
+            var held = holding?.Quantity ?? 0;
 
-        holding.AverageCost = MoneyMath.Round4(HoldingMath.AverageCostAfterBuy(
-            holding.Quantity, holding.AverageCost, request.Quantity, unitPrice, request.Fee));
+            if (holding is null || held < request.Quantity)
+                throw new ConflictException("Insufficient holdings",
+                    $"Cannot sell {Format(request.Quantity)} {symbol}; portfolio {portfolioId} holds {Format(held)}.");
 
-        holding.Quantity += request.Quantity;
+            realizedPnl = HoldingMath.RealizedPnlOnSell(request.Quantity, unitPrice, request.Fee, holding.AverageCost);
+            holding.RealizedPnl = MoneyMath.Round2(holding.RealizedPnl + realizedPnl.Value);
+            holding.Quantity -= request.Quantity;
+            if (holding.Quantity == 0)
+                holding.AverageCost = 0;
+
+        }
 
         var transaction = new Transaction
         {
@@ -63,7 +81,7 @@ public class TransactionService(AppDbContext db) : ITransactionService
             throw new ConflictException("Concurrent change", "The holding was modified by another request. Please retry.");
         }
 
-        return ToResponse(transaction, symbol, null);
+        return ToResponse(transaction, symbol, realizedPnl);
     }
 
     private static TransactionResponse ToResponse(Transaction t, string symbol, decimal? realizedPnl)
@@ -84,4 +102,7 @@ public class TransactionService(AppDbContext db) : ITransactionService
             ExecutedAtUtc = t.ExecutedAtUtc
         };
     }
+
+    private static string Format(decimal value)
+        => value.ToString("0.######", CultureInfo.InvariantCulture);
 }
