@@ -16,4 +16,9 @@ public class TransactionsController(ITransactionService transactionService) : Co
 
         return Created($"/api/portfolios/{portfolioId}/transactions", created);
     }
+
+    [HttpGet]
+    public async Task<ActionResult<PagedResponse<TransactionResponse>>> List(
+        int portfolioId, [FromQuery] TransactionListQuery query, CancellationToken ct)
+        => Ok(await transactionService.ListAsync(portfolioId, query, ct));
 }

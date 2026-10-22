@@ -84,6 +84,48 @@ public class TransactionService(AppDbContext db) : ITransactionService
         return ToResponse(transaction, symbol, realizedPnl);
     }
 
+    public async Task<PagedResponse<TransactionResponse>> ListAsync(int portfolioId, TransactionListQuery q, CancellationToken ct)
+    {
+        var portfolioExists = await db.Portfolios.AnyAsync(p => p.Id == portfolioId, ct);
+        if (!portfolioExists)
+            throw new NotFoundException($"Portfolio {portfolioId} does not exist.");
+
+        var query = db.Transactions.AsNoTracking().Where(t => t.PortfolioId == portfolioId);
+
+        if (q.Symbol is not null)
+            query = query.Where(t => t.Asset.Symbol == Symbols.Normalize(q.Symbol));
+        if (q.Type is not null)
+            query = query.Where(t => t.Type == q.Type.Value);
+        if (q.From is not null)
+        {
+            var fromUtc = new DateTimeOffset(q.From.Value.ToDateTime(TimeOnly.MinValue), TimeSpan.Zero);
+            query = query.Where(t => t.ExecutedAtUtc >= fromUtc);
+        }
+        if (q.To is not null)
+        {
+            var toUtc = new DateTimeOffset(q.To.Value.AddDays(1).ToDateTime(TimeOnly.MinValue), TimeSpan.Zero);
+            query = query.Where(t => t.ExecutedAtUtc <  toUtc);
+        }
+
+        var total = await query.CountAsync(ct);
+
+        var rows = await query
+            .OrderByDescending(t => t.ExecutedAtUtc).ThenByDescending(t => t.Id)
+            .Skip((q.Page - 1) * q.PageSize).Take(q.PageSize)
+            .Select(t => new { Transaction = t, Symbol = t.Asset.Symbol })
+            .ToListAsync(ct);
+
+        var response = rows.Select(row => ToResponse(row.Transaction, row.Symbol, null)).ToList();
+
+        return new PagedResponse<TransactionResponse>
+        {
+            Items = response,
+            Page = q.Page,
+            PageSize = q.PageSize,
+            TotalCount = total,
+        };
+    }
+
     private static TransactionResponse ToResponse(Transaction t, string symbol, decimal? realizedPnl)
     {
         var gross = t.Quantity * t.UnitPrice;
