@@ -1,8 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using PortfolioApi.Domain;
 using PortfolioApi.Dtos;
 using PortfolioApi.Services;
-using System.ComponentModel.DataAnnotations;
 
 namespace PortfolioApi.Controllers;
 

@@ -30,6 +30,7 @@ builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(conn
 builder.Services.AddScoped<IAssetService, AssetService>();
 builder.Services.AddScoped<IPortfolioService, PortfolioService>();
 builder.Services.AddScoped<ITransactionService, TransactionService>();
+builder.Services.AddScoped<IHoldingService, HoldingService>();
 
 var app = builder.Build();
 
