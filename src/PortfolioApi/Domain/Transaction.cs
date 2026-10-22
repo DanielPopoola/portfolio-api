@@ -2,14 +2,14 @@
 
 public class Transaction
 {
-    public int Id { get; set; }
-    public int PortfolioId { get; set; }
-    public Portfolio Portfolio { get; set; } = null!;
-    public int AssetId { get; set; }
-    public Asset Asset { get; set; } = null!;
-    public TransactionType Type { get; set; }
-    public decimal Quantity { get; set; }
-    public decimal UnitPrice { get; set; }
-    public decimal Fee { get; set; }
-    public DateTimeOffset ExecutedAtUtc { get; set; }
+    public int Id { get; init; }
+    public int PortfolioId { get; init; }
+    public Portfolio Portfolio { get; init; } = null!;
+    public int AssetId { get; init; }
+    public Asset Asset { get; init; } = null!;
+    public TransactionType Type { get; init; }
+    public decimal Quantity { get; init; }
+    public decimal UnitPrice { get; init; }
+    public decimal Fee { get; init; }
+    public DateTimeOffset ExecutedAtUtc { get; init; }
 }
