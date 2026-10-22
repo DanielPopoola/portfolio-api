@@ -1,6 +1,19 @@
 @PortfolioApi_HostAddress = http://localhost:5001
 
-GET {{PortfolioApi_HostAddress}}/weatherforecast/
-Accept: application/json
+### 1. Create asset ACME
+POST {{host}}/api/assets
+Content-Type: application/json
 
-###
+{ "symbol": "ACME", "name": "Acme Corp", "assetType": "Stock", "currentPrice": 50.00 }
+
+### 2. Create asset GOVB
+POST {{host}}/api/assets
+Content-Type: application/json
+
+{ "symbol": "GOVB", "name": "Gov Bond 2030", "assetType": "Bond", "currentPrice": 980.00 }
+
+### 3. Create asset INDX
+POST {{host}}/api/assets
+Content-Type: application/json
+
+{ "symbol": "INDX", name: "Global Index Fund", "assetType": "Fund", "currentPrice": 100.00 }

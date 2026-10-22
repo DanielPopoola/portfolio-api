@@ -1,0 +1,130 @@
+@host = http://localhost:5001
+
+
+### 1. Create asset ACME
+POST {{host}}/api/assets
+Content-Type: application/json
+
+{ "symbol": "ACME", "name": "Acme Corp", "assetType": "Stock", "currentPrice": 50.00 }
+
+### 2. Create asset GOVB
+POST {{host}}/api/assets
+Content-Type: application/json
+
+{ "symbol": "GOVB", "name": "Gov Bond 2030", "assetType": "Bond", "currentPrice": 980.00 }
+
+### 3. Create asset INDX
+POST {{host}}/api/assets
+Content-Type: application/json
+
+{ "symbol": "INDX", "name": "Global Index Fund", "assetType": "Fund", "currentPrice": 100.00 }
+
+### 4. Create portfolio "Retirement" (expect id 1)
+POST {{host}}/api/portfolios
+Content-Type: application/json
+
+{ "name": "Retirement", "ownerEmail": "ada@example.com" }
+
+### 5. Buy ACME 100 @ 50, fee 10
+POST {{host}}/api/portfolios/1/transactions
+Content-Type: application/json
+
+{ "symbol": "ACME", "type": "Buy", "quantity": 100, "unitPrice": 50, "fee": 10 }
+
+### 6. Buy ACME 100 @ 54, fee 10
+POST {{host}}/api/portfolios/1/transactions
+Content-Type: application/json
+
+{ "symbol": "ACME", "type": "Buy", "quantity": 100, "unitPrice": 54, "fee": 10 }
+
+### 7. Sell ACME 50 @ 60, fee 10 (expect 201, realizedPnl 385.00)
+POST {{host}}/api/portfolios/1/transactions
+Content-Type: application/json
+
+{ "symbol": "ACME", "type": "Sell", "quantity": 50, "unitPrice": 60, "fee": 10 }
+
+### 8. Buy GOVB 10 @ 980, fee 0
+POST {{host}}/api/portfolios/1/transactions
+Content-Type: application/json
+
+{ "symbol": "GOVB", "type": "Buy", "quantity": 10, "unitPrice": 980, "fee": 0 }
+
+### 9. Buy INDX 40.5 @ 100, fee 0
+POST {{host}}/api/portfolios/1/transactions
+Content-Type: application/json
+
+{ "symbol": "INDX", "type": "Buy", "quantity": 40.5, "unitPrice": 100, "fee": 0 }
+
+### 10a. Update price ACME to 58.00
+PUT {{host}}/api/assets/ACME/price
+Content-Type: application/json
+
+{ "price": 58.00 }
+
+### 10b. Update price GOVB to 1000.00
+PUT {{host}}/api/assets/GOVB/price
+Content-Type: application/json
+
+{ "price": 1000.00 }
+
+### 10c. Update price INDX to 110.00
+PUT {{host}}/api/assets/INDX/price
+Content-Type: application/json
+
+{ "price": 110.00 }
+
+### 11. Get holdings (expect order GOVB, ACME, INDX)
+GET {{host}}/api/portfolios/1/holdings
+
+### 12. Get summary (totalMarketValue 23155.00, totalReturn 1875.00)
+GET {{host}}/api/portfolios/1/summary
+
+
+###############################################################
+# EXTRAS: acceptance scenarios (error cases and filters)
+###############################################################
+
+### S2. Duplicate symbol, lowercase (expect 409)
+POST {{host}}/api/assets
+Content-Type: application/json
+
+{ "symbol": "acme", "name": "Acme Corp", "assetType": "Stock", "currentPrice": 50.00 }
+
+### S3. Invalid symbol (expect 400)
+POST {{host}}/api/assets
+Content-Type: application/json
+
+{ "symbol": "AC ME", "name": "Bad", "assetType": "Stock", "currentPrice": 1 }
+
+### S4. Get asset with lowercase symbol (expect 200)
+GET {{host}}/api/assets/acme
+
+### S5. Unknown asset (expect 404)
+GET {{host}}/api/assets/ZZZZ
+
+### S6. Quantity 0 (expect 400, "Quantity must be greater than 0.")
+POST {{host}}/api/portfolios/1/transactions
+Content-Type: application/json
+
+{ "symbol": "ACME", "type": "Buy", "quantity": 0 }
+
+### S7. Transaction for an unknown symbol (expect 404)
+POST {{host}}/api/portfolios/1/transactions
+Content-Type: application/json
+
+{ "symbol": "ZZZZ", "type": "Buy", "quantity": 1 }
+
+### S8. Unknown portfolio (expect 404)
+GET {{host}}/api/portfolios/999/holdings
+
+### S9. Oversell (expect 409, "Cannot sell 500 ACME; portfolio 1 holds 150.")
+POST {{host}}/api/portfolios/1/transactions
+Content-Type: application/json
+
+{ "symbol": "ACME", "type": "Sell", "quantity": 500 }
+
+### S15. Paging (page 2, size 10)
+GET {{host}}/api/portfolios/1/transactions?page=2&pageSize=10
+
+### Filtered transaction list
+GET {{host}}/api/portfolios/1/transactions?symbol=ACME&type=Sell

@@ -19,7 +19,7 @@ public class HoldingService(AppDbContext db) : IHoldingService
             .ThenBy(h => h.Asset.Symbol)
             .Select(h => new
             {
-                Symbol = h.Asset.Symbol,
+                h.Asset.Symbol,
                 h.Quantity,
                 h.AverageCost,
                 Price = h.Asset.CurrentPrice,
