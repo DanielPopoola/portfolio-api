@@ -1,0 +1,6 @@
+ Executed DbCommand (143ms) [Parameters=[@__portfolioId_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT [a].[Symbol], [h].[Quantity], [h].[AverageCost], [a].[CurrentPrice] AS [Price], [h].[RealizedPnl]
+      FROM [Holdings] AS [h]
+      INNER JOIN [Assets] AS [a] ON [h].[AssetId] = [a].[Id]
+      WHERE [h].[PortfolioId] = @__portfolioId_0 AND [h].[Quantity] > 0.0
+      ORDER BY [h].[Quantity] * [a].[CurrentPrice] DESC, [a].[Symbol]

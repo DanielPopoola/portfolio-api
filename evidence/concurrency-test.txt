@@ -1,0 +1,5 @@
+{"id":6,"portfolioId":1,"symbol":"ACME","type":"Sell","quantity":100,"unitPrice":60,"fee":0,"grossAmount":6000,"netAmount":6000,"realizedPnl":790.00,"executedAtUtc":"2026-10-23T11:23:45Z"} [HTTP 201]
+{"title":"Concurrent change","status":409,"detail":"The holding was modified by another request. Please retry."}{"title":"Concurrent change","status":409,"detail":"The holding was modified by another request. Please retry."}{"title":"Concurrent change","status":409,"detail":"The holding was modified by another request. Please retry."} [HTTP 409]
+ [HTTP 409]
+ [HTTP 409]
+{"title":"Concurrent change","status":409,"detail":"The holding was modified by another request. Please retry."} [HTTP 409]

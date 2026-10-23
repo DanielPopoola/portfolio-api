@@ -1,0 +1,279 @@
+{
+  "id": 1,
+  "symbol": "ACME",
+  "name": "Acme Corp",
+  "assetType": "Stock",
+  "currentPrice": 50.00,
+  "priceUpdatedAtUtc": "2026-10-23T11:04:36Z"
+}
+
+{
+  "id": 2,
+  "symbol": "GOVB",
+  "name": "Gov Bond 2030",
+  "assetType": "Bond",
+  "currentPrice": 980.00,
+  "priceUpdatedAtUtc": "2026-10-23T11:06:12Z"
+}
+
+{
+  "id": 3,
+  "symbol": "INDX",
+  "name": "Global Index Fund",
+  "assetType": "Fund",
+  "currentPrice": 100.00,
+  "priceUpdatedAtUtc": "2026-10-23T11:06:22Z"
+}
+
+{
+  "id": 1,
+  "name": "Retirement",
+  "ownerEmail": "ada@example.com",
+  "baseCurrency": "USD",
+  "createdAtUtc": "2026-10-23T11:06:37Z"
+}
+
+{
+  "id": 1,
+  "portfolioId": 1,
+  "symbol": "ACME",
+  "type": "Buy",
+  "quantity": 100,
+  "unitPrice": 50,
+  "fee": 10,
+  "grossAmount": 5000,
+  "netAmount": 5010,
+  "realizedPnl": null,
+  "executedAtUtc": "2026-10-23T11:06:46Z"
+}
+
+{
+  "id": 2,
+  "portfolioId": 1,
+  "symbol": "ACME",
+  "type": "Buy",
+  "quantity": 100,
+  "unitPrice": 54,
+  "fee": 10,
+  "grossAmount": 5400,
+  "netAmount": 5410,
+  "realizedPnl": null,
+  "executedAtUtc": "2026-10-23T11:07:05Z"
+}
+
+{
+  "id": 3,
+  "portfolioId": 1,
+  "symbol": "ACME",
+  "type": "Sell",
+  "quantity": 50,
+  "unitPrice": 60,
+  "fee": 10,
+  "grossAmount": 3000,
+  "netAmount": 2990,
+  "realizedPnl": 385.00,
+  "executedAtUtc": "2026-10-23T11:07:19Z"
+}
+
+{
+  "id": 4,
+  "portfolioId": 1,
+  "symbol": "GOVB",
+  "type": "Buy",
+  "quantity": 10,
+  "unitPrice": 980,
+  "fee": 0,
+  "grossAmount": 9800,
+  "netAmount": 9800,
+  "realizedPnl": null,
+  "executedAtUtc": "2026-10-23T11:07:31Z"
+}
+
+{
+  "id": 5,
+  "portfolioId": 1,
+  "symbol": "INDX",
+  "type": "Buy",
+  "quantity": 40.5,
+  "unitPrice": 100,
+  "fee": 0,
+  "grossAmount": 4050.0,
+  "netAmount": 4050.0,
+  "realizedPnl": null,
+  "executedAtUtc": "2026-10-23T11:07:45Z"
+}
+
+{
+  "id": 1,
+  "symbol": "ACME",
+  "name": "Acme Corp",
+  "assetType": "Stock",
+  "currentPrice": 58.00,
+  "priceUpdatedAtUtc": "2026-10-23T11:08:06Z"
+}
+
+{
+  "id": 2,
+  "symbol": "GOVB",
+  "name": "Gov Bond 2030",
+  "assetType": "Bond",
+  "currentPrice": 1000.00,
+  "priceUpdatedAtUtc": "2026-10-23T11:08:25Z"
+}
+
+{
+  "id": 3,
+  "symbol": "INDX",
+  "name": "Global Index Fund",
+  "assetType": "Fund",
+  "currentPrice": 110.00,
+  "priceUpdatedAtUtc": "2026-10-23T11:08:32Z"
+}
+
+[
+  {
+    "symbol": "GOVB",
+    "quantity": 10.000000,
+    "averageCost": 980.0000,
+    "costBasis": 9800.00,
+    "currentPrice": 1000.00,
+    "marketValue": 10000.00,
+    "unrealizedPnl": 200.00,
+    "unrealizedPnlPercent": 2.04,
+    "realizedPnl": 0.00
+  },
+  {
+    "symbol": "ACME",
+    "quantity": 150.000000,
+    "averageCost": 52.1000,
+    "costBasis": 7815.00,
+    "currentPrice": 58.00,
+    "marketValue": 8700.00,
+    "unrealizedPnl": 885.00,
+    "unrealizedPnlPercent": 11.32,
+    "realizedPnl": 385.00
+  },
+  {
+    "symbol": "INDX",
+    "quantity": 40.500000,
+    "averageCost": 100.0000,
+    "costBasis": 4050.00,
+    "currentPrice": 110.00,
+    "marketValue": 4455.00,
+    "unrealizedPnl": 405.00,
+    "unrealizedPnlPercent": 10.0,
+    "realizedPnl": 0.00
+  }
+]
+
+{
+  "portfolioId": 1,
+  "name": "Retirement",
+  "baseCurrency": "USD",
+  "holdingsCount": 3,
+  "totalMarketValue": 23155.00,
+  "totalCostBasis": 21665.00,
+  "unrealizedPnl": 1490.00,
+  "unrealizedPnlPercent": 6.88,
+  "realizedPnl": 385.00,
+  "totalReturn": 1875.00,
+  "allocation": [
+    {
+      "assetType": "Bond",
+      "marketValue": 10000.00,
+      "percent": 43.19
+    },
+    {
+      "assetType": "Stock",
+      "marketValue": 8700.00,
+      "percent": 37.57
+    },
+    {
+      "assetType": "Fund",
+      "marketValue": 4455.00,
+      "percent": 19.24
+    }
+  ]
+}
+
+EXTRAS
+
+{
+  "title": "Duplicate symbol",
+  "status": 409,
+  "detail": "Asset 'ACME' already exists."
+}
+
+{
+  "title": "One or more validation errors occurred.",
+  "status": 400,
+  "errors": {
+    "symbol": [
+      "The field Symbol must match the regular expression '^[a-zA-Z0-9]+$'."
+    ]
+  }
+}
+
+{
+  "id": 1,
+  "symbol": "ACME",
+  "name": "Acme Corp",
+  "assetType": "Stock",
+  "currentPrice": 58.0000,
+  "priceUpdatedAtUtc": "2026-10-23T11:08:06Z"
+}
+
+{
+  "title": "Not found",
+  "status": 404,
+  "detail": "Asset 'ZZZZ' does not exist."
+}
+
+{
+  "title": "One or more validation errors occurred.",
+  "status": 400,
+  "errors": {
+    "quantity": [
+      "Quantity must be greater than 0."
+    ]
+  }
+}
+
+{
+  "title": "Not found",
+  "status": 404,
+  "detail": "Asset 'ZZZZ' does not exist."
+}
+
+{
+  "title": "Not found",
+  "status": 404,
+  "detail": "Portfolio 999 does not exist."
+}
+
+{
+  "title": "Insufficient holdings",
+  "status": 409,
+  "detail": "Cannot sell 500 ACME; portfolio 1 holds 150."
+}
+
+{
+  "items": [
+    {
+      "id": 3,
+      "portfolioId": 1,
+      "symbol": "ACME",
+      "type": "Sell",
+      "quantity": 50.000000,
+      "unitPrice": 60.0000,
+      "fee": 10.00,
+      "grossAmount": 3000.00,
+      "netAmount": 2990.00,
+      "realizedPnl": null,
+      "executedAtUtc": "2026-10-23T11:07:19Z"
+    }
+  ],
+  "page": 1,
+  "pageSize": 20,
+  "totalCount": 1
+}
