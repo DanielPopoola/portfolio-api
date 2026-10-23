@@ -1,0 +1,10 @@
+HTTP/1.1 500 Internal Server Error
+Content-Type: applicaton/problem+json
+Date: Fri, 23 Oct 2026 11:26:48 GMT
+Server: Kestrel
+Cache-Control: no-cache,no-store
+Expires: -1
+Pragma: no-cache
+Transfer-Encoding: chunked
+
+{"title":"An unexpected error occurred.","status":500}
